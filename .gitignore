@@ -1,0 +1,15 @@
+# Quarto / R
+_book/
+.quarto/
+_freeze/
+/.Rproj.user
+.Rhistory
+.RData
+renv/library/
+renv/staging/
+# standalone renders outside the book
+*.html
+*_files/
+cheatsheet_pdf/.quarto/
+cheatsheet_pdf/cheatsheet.pdf
+**/*.quarto_ipynb

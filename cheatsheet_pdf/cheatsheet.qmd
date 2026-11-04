@@ -1,0 +1,15 @@
+---
+title: "Reference card: regulated diagnostic biostatistics"
+format:
+  typst:
+    papersize: a4
+    margin:
+      x: 1.2cm
+      y: 1.1cm
+    fontsize: 9pt
+    columns: 2
+    toc: false
+    number-sections: false
+---
+
+{{< include ../cheatsheet_body.md >}}

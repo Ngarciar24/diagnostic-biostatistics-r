@@ -1,0 +1,59 @@
+---
+title: "About this book"
+---
+
+```{r setup}
+#| include: false
+library(knitr)
+```
+
+The statistics of in-vitro diagnostics, worked in R on simulated data: analytical performance (precision, detection capability, linearity, method comparison), clinical performance (diagnostic accuracy, ROC, cut-offs, sample size), companion-diagnostic bridging, and a statistical analysis plan with a dry run and an independent re-derivation.
+
+Every chapter has the same four parts:
+
+- **(a) Concept.** The quantity being estimated and why it matters.
+- **(b) Regulatory anchor.** The CLSI EP document, IVDR article or FDA guidance that governs the design.
+- **(c) R lab.** A simulated study analysed in R, with at least one independent cross-check: a second package, a hand formula or a simulation.
+- **(d) Claims.** What the chapter rests on; each claim is in `claims_ledger.csv` with its source, date checked and confidence.
+
+## Reading conventions
+
+- **[S]** = stated in a primary public source (cited in `claims_ledger.csv`).
+- **[Y]** = my synthesis of standard theory; not a quotation.
+- **[A]** = an assumption used in a simulation.
+- "not verified: paywalled" = could not be checked against the document; not stated as fact.
+- CLSI texts are paywalled. Nothing here quotes them.
+- All data are simulated. The one real-world example (Chapter 6) uses only numbers published in the FDA decision summary K261686, with page citations.
+
+## Contents
+
+| Chapter | Topic | Governing documents |
+|---|---|---|
+| 1 | Landscape and vocabulary | IVDR, MDCG 2022-2, ISO 20916, FDA pathways |
+| 2 | Precision and variance components | EP05, EP15 |
+| 3 | Detection capability and linearity | EP17, EP06 |
+| 4 | Method comparison, interference, stability, lots | EP09c, EP07, EP25, EP26 |
+| 5 | Diagnostic accuracy, ROC | EP12, EP24, FDA 2007 guidance, STARD |
+| 6 | Cut-offs, two-cut-off designs, intermediate zone | EP24, EP12, FDA decision summary |
+| 7 | Sample size and power | Buderer, Flahault, Hanley–McNeil |
+| 8 | Companion diagnostics and bridging | FDA CDx guidances, IVDR Art 48 |
+| 9 | Statistical analysis plan | IVDR Annex XIII, ISO 20916, ICH E9 |
+| 10 | Reference intervals and longitudinal biomarkers | EP28 |
+
+## Analysis question → governing document → R tools
+
+```{r map}
+m <- read.csv("question_map.csv")
+kable(m, col.names = c("Analysis question", "Governing document", "R tools", "Chapter"), row.names = FALSE)
+```
+
+## Corrections to commonly repeated statements (verified 2026-10-16)
+
+1. EP05 is now Ed4 (Dec 2025); EP25, EP26, EP35 and EP19 also have newer editions than many references list.
+2. IVDR Arts 47–48 are classification and conformity assessment; the general safety and performance requirements are in Annex I. Companion diagnostics are class **C** (Rule 3(f)); the medicines-authority consultation is in Art 48(7)/(8) for class C (and 48(3)/(4) for class D).
+3. FDA's 2020 CDx guidance is titled "…for a Specific Group of Oncology Therapeutic Products" (final); "Group or Class" was the draft. The 2016 codevelopment guidance is still a draft.
+4. pTau217: FDA decision 2026-08-19 (K261686), announced by the manufacturer on 2026-08-24. The two cited papers used a prototype assay, not the cleared one.
+
+## How it was made
+
+Written with Claude Code as an AI-assisted coding workflow. Every claim carries its source and a confidence level in `claims_ledger.csv`; the K261686 figures were re-checked by hand against the decision-summary PDF, and the README lists what could not be verified. The helper functions are covered by unit tests in `tests/testthat`.

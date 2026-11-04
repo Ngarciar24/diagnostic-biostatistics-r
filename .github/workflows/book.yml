@@ -1,0 +1,70 @@
+# Restore the pinned R environment, run the unit tests, render the book and
+# publish it on GitHub Pages (Settings -> Pages -> Source: GitHub Actions).
+name: render-and-test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      RENV_CONFIG_REPOS_OVERRIDE: https://packagemanager.posit.co/cran/__linux__/noble/latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System libraries
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev libssl-dev libxml2-dev libfontconfig1-dev \
+            libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev \
+            libtiff5-dev libjpeg-dev libudunits2-dev libgdal-dev libgeos-dev \
+            libproj-dev libglpk-dev
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.3.3"
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-renv@v2
+
+      # Quarto runs each chapter from its own folder, where the project
+      # .Rprofile is not read, so point R at the restored renv library.
+      - name: Use the renv library in every R session
+        run: echo "R_LIBS_USER=$(Rscript -e 'cat(renv::paths$library())' 2>/dev/null | tail -n 1)" >> "$GITHUB_ENV"
+
+      - name: Unit tests
+        run: Rscript -e 'testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render the book
+        run: quarto render
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _book
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

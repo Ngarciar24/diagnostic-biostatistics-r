@@ -1,0 +1,37 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Diagnostic biostatistics in R"
+  subtitle: "Analytical and clinical performance, cut-offs and companion diagnostics, on simulated data"
+  author: "Ignacio García Ribelles"
+  repo-url: https://github.com/Ngarciar24/diagnostic-biostatistics-r
+  repo-actions: [source]
+  site-url: https://ngarciar24.github.io/diagnostic-biostatistics-r/
+  chapters:
+    - index.qmd
+    - chapters/01-landscape.qmd
+    - chapters/02-precision.qmd
+    - chapters/03-detection-linearity.qmd
+    - chapters/04-method-comparison.qmd
+    - chapters/05-diagnostic-accuracy.qmd
+    - chapters/06-cutoffs.qmd
+    - chapters/07-sample-size.qmd
+    - chapters/08-companion-diagnostics.qmd
+    - chapters/09-sap.qmd
+    - chapters/10-reference-longitudinal.qmd
+  appendices:
+    - mock_sap/sap_template.qmd
+    - mock_sap/sap_ptau217_mock.qmd
+    - mock_sap/r_environment_note.qmd
+    - cheatsheet.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: false
+execute:
+  warning: false
+  message: false
